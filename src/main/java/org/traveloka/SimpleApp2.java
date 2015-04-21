@@ -15,18 +15,19 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import scala.Tuple2;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Created by ariesutiono on 13/04/15.
+ * Created by ariesutiono on 20/04/15.
  */
-public class SimpleApp {
+public class SimpleApp2 {
   private static final Pattern SPACE = Pattern.compile(" ");
   private static JavaPairReceiverInputDStream<String, String> kafkaStream;
   private static final Logger logger = Logger.getLogger(SimpleApp.class);
 
-  private SimpleApp(){}
+  private SimpleApp2(){}
 
   public static void main(String args[]) throws Exception {
     SparkConf conf = new SparkConf().setAppName("SimpleApp");
@@ -40,7 +41,7 @@ public class SimpleApp {
     kafkaParams.put("zookeeper.session.timeout.ms", "3000");
     kafkaParams.put("zookeeper.sync.time.ms", "200");
     kafkaParams.put("auto.commit.interval.ms", "60000");
-    kafkaParams.put("auto.commit.enable","false");
+    kafkaParams.put("auto.commit.enable","true");
 
 
     //create topic listener
@@ -127,12 +128,12 @@ public class SimpleApp {
 //    lines.print();
 
     JavaDStream<String> lines = messages.map(
-        new Function<Tuple2<String, String>, String>() {
-           @Override
-           public String call(Tuple2<String, String> stringStringTuple2) throws Exception {
-             return stringStringTuple2._2();
-           }
-         });
+            new Function<Tuple2<String, String>, String>() {
+              @Override
+              public String call(Tuple2<String, String> stringStringTuple2) throws Exception {
+                return stringStringTuple2._2();
+              }
+            });
 
     JavaPairDStream<String, String> linespair = lines.mapToPair(new PairFunction<String, String, String>() {
       @Override
@@ -152,7 +153,7 @@ public class SimpleApp {
       }
     });
 
-    
+
 
 //    JavaDStream<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
 //      @Override
